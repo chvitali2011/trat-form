@@ -3,507 +3,498 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>T-RAT · Quiz</title>
+<title>I-RAT / T-RAT · Isolamento termico e acustico</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap');
-
-  :root {
-    --ink: #1a1a2e;
-    --paper: #f5f0e8;
-    --accent: #c84b31;
-    --gold: #e8b84b;
-    --soft: #d4cfc4;
-    --shadow: rgba(26,26,46,0.12);
-  }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    background: var(--paper);
-    color: var(--ink);
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #F5F4F0;
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 2rem 1rem;
-    background-image:
-      radial-gradient(ellipse at 20% 10%, rgba(232,184,75,0.15) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 90%, rgba(200,75,49,0.1) 0%, transparent 50%);
+    padding: 20px;
   }
 
   .card {
-    background: #fff;
-    border: 2px solid var(--ink);
-    border-radius: 2px;
-    max-width: 680px;
+    background: #FAFAF8;
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 560px;
     width: 100%;
-    box-shadow: 8px 8px 0 var(--ink);
-    overflow: hidden;
-    animation: slideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+    border: 0.5px solid #D3D1C7;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
   }
 
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(32px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ── Header ── */
-  .header {
-    background: var(--ink);
-    color: var(--paper);
-    padding: 2rem 2.5rem 1.6rem;
-    position: relative;
-    overflow: hidden;
-  }
-  .header::after {
-    content: 'T-RAT';
-    position: absolute;
-    right: -10px; top: -18px;
-    font-family: 'Playfair Display', serif;
-    font-size: 7rem;
-    font-weight: 900;
-    color: rgba(255,255,255,0.04);
-    pointer-events: none;
-    letter-spacing: -4px;
-  }
   .badge {
     display: inline-block;
-    background: var(--accent);
-    color: #fff;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 0.12em;
-    padding: 3px 10px;
-    border-radius: 2px;
-    text-transform: uppercase;
-    margin-bottom: 0.7rem;
-  }
-  .header h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.7rem;
-    line-height: 1.2;
+    background: #dc2626;
+    color: white;
+    font-size: 11px;
     font-weight: 700;
-    margin-bottom: 0.3rem;
-  }
-  .header p {
-    font-size: 0.82rem;
-    opacity: 0.6;
-    font-weight: 300;
+    letter-spacing: 0.08em;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
   }
 
-  /* ── Student name ── */
-  .name-section {
-    padding: 1.6rem 2.5rem 0;
-    border-bottom: 1px dashed var(--soft);
-    padding-bottom: 1.4rem;
+  .card h1 {
+    color: #2C2C2A;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    line-height: 1.3;
   }
-  .name-section label {
-    display: block;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.72rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 0.5rem;
+
+  .subtitle {
+    color: #5F5E5A;
+    font-size: 13px;
+    margin-bottom: 24px;
   }
-  .name-section input {
+
+  .name-input {
     width: 100%;
-    border: 1.5px solid var(--soft);
-    border-radius: 2px;
-    padding: 0.65rem 0.9rem;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.95rem;
-    color: var(--ink);
-    background: #fafaf8;
+    background: #F1EFE8;
+    border: 1px solid #D3D1C7;
+    border-radius: 8px;
+    color: #2C2C2A;
+    padding: 10px 14px;
+    font-size: 14px;
+    margin-bottom: 24px;
     outline: none;
     transition: border-color 0.2s;
   }
-  .name-section input:focus { border-color: var(--ink); }
+  .name-input:focus { border-color: #378ADD; }
+  .name-input::placeholder { color: #888780; }
 
-  /* ── Question ── */
-  .question-section {
-    padding: 1.8rem 2.5rem 0;
+  /* Progress */
+  .progress-bar {
+    background: #E8E6DF;
+    border-radius: 8px;
+    height: 6px;
+    margin-bottom: 8px;
+    overflow: hidden;
   }
-  .q-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.68rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: #888;
-    margin-bottom: 0.6rem;
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #378ADD, #1D9E75);
+    border-radius: 8px;
+    transition: width 0.4s ease;
   }
-  .q-text {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.15rem;
+  .progress-label {
+    color: #888780;
+    font-size: 12px;
+    margin-bottom: 20px;
+  }
+
+  /* Question */
+  .question-text {
+    color: #2C2C2A;
+    font-size: 15px;
+    font-weight: 600;
     line-height: 1.5;
-    color: var(--ink);
-    margin-bottom: 0.3rem;
+    margin-bottom: 20px;
+    padding: 16px;
+    background: #F1EFE8;
+    border-radius: 10px;
+    border-left: 3px solid #378ADD;
   }
 
-  /* ── Points HUD ── */
-  .points-hud {
+  /* Points remaining */
+  .points-bar {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    padding: 1rem 2.5rem;
-    background: #fafaf8;
-    border-top: 1px solid var(--soft);
-    border-bottom: 1px solid var(--soft);
-    margin-top: 1.4rem;
+    justify-content: space-between;
+    margin-bottom: 14px;
   }
-  .hud-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: #666;
-    flex: 1;
-  }
-  .dots {
-    display: flex;
-    gap: 6px;
-  }
-  .dot {
-    width: 14px; height: 14px;
-    border-radius: 50%;
-    border: 2px solid var(--soft);
-    background: transparent;
-    transition: background 0.25s, border-color 0.25s;
-  }
-  .dot.filled {
-    background: var(--gold);
-    border-color: var(--gold);
-  }
-  .remaining-num {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.6rem;
+  .points-label { color: #5F5E5A; font-size: 13px; }
+  .points-count {
+    background: #F1EFE8;
+    color: #2C2C2A;
+    font-size: 22px;
     font-weight: 700;
-    color: var(--ink);
-    min-width: 28px;
-    text-align: right;
-    transition: color 0.2s;
-  }
-  .remaining-num.zero { color: var(--accent); }
-
-  /* ── Options ── */
-  .options {
-    padding: 1.2rem 2.5rem 0.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-  .option-row {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
-    gap: 0.9rem;
-    padding: 0.8rem 1rem;
-    border: 1.5px solid var(--soft);
-    border-radius: 2px;
+    justify-content: center;
+    border: 1px solid #D3D1C7;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .points-count.zero { color: #1D9E75; border-color: #1D9E75; }
+  .points-count.warning { color: #BA7517; }
+
+  /* Options */
+  .options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+
+  .option {
+    background: #F1EFE8;
+    border: 1px solid #D3D1C7;
+    border-radius: 10px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     transition: border-color 0.2s, background 0.2s;
-    cursor: default;
   }
-  .option-row:has(.stepper-btn:hover),
-  .option-row.active {
-    border-color: var(--ink);
-    background: #fafaf8;
-  }
+  .option.has-points { border-color: #378ADD; background: #E6F1FB; }
+
+  .option-left { display: flex; align-items: center; gap: 12px; }
+
   .option-letter {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.1rem;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: #E8E6DF;
+    color: #888780;
+    font-size: 12px;
     font-weight: 700;
-    color: var(--accent);
-    min-width: 20px;
-  }
-  .option-text {
-    flex: 1;
-    font-size: 0.9rem;
-    line-height: 1.4;
-    color: var(--ink);
-  }
-  .stepper {
     display: flex;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.2s, color 0.2s;
   }
-  .stepper-btn {
-    width: 28px; height: 28px;
-    border: 1.5px solid var(--soft);
-    border-radius: 2px;
-    background: #fff;
-    cursor: pointer;
-    font-size: 1rem;
-    line-height: 1;
-    color: var(--ink);
-    transition: background 0.15s, border-color 0.15s;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .stepper-btn:hover:not(:disabled) { background: var(--ink); color: #fff; border-color: var(--ink); }
-  .stepper-btn:disabled { opacity: 0.25; cursor: not-allowed; }
-  .stepper-val {
-    font-family: 'DM Mono', monospace;
-    font-size: 1rem;
-    font-weight: 500;
-    min-width: 18px;
-    text-align: center;
-    color: var(--ink);
-  }
-  .stepper-val.nonzero { color: var(--accent); font-weight: 700; }
+  .option.has-points .option-letter { background: #378ADD; color: white; }
 
-  /* ── Submit ── */
-  .footer {
-    padding: 1.5rem 2.5rem 2rem;
-  }
-  .submit-btn {
-    width: 100%;
-    padding: 0.9rem;
-    background: var(--ink);
-    color: var(--paper);
+  .option-text { color: #444441; font-size: 14px; line-height: 1.4; }
+  .option.has-points .option-text { color: #0C447C; }
+
+  .option-controls { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+  .btn-ctrl {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
     border: none;
-    border-radius: 2px;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.82rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, transform 0.1s;
+    line-height: 1;
+  }
+  .btn-ctrl:active { transform: scale(0.9); }
+  .btn-minus { background: #E8E6DF; color: #888780; }
+  .btn-minus:hover { background: #D3D1C7; color: #2C2C2A; }
+  .btn-plus { background: #378ADD; color: white; }
+  .btn-plus:hover { background: #185FA5; }
+  .btn-plus:disabled { background: #D3D1C7; color: #888780; cursor: not-allowed; }
+
+  .opt-points {
+    color: #2C2C2A;
+    font-size: 18px;
+    font-weight: 700;
+    min-width: 20px;
+    text-align: center;
+  }
+
+  /* Submit button */
+  .btn-submit {
+    width: 100%;
+    padding: 14px;
+    background: #378ADD;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
     cursor: pointer;
     transition: background 0.2s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
   }
-  .submit-btn:hover { background: var(--accent); }
-  .submit-btn:active { transform: scale(0.99); }
-  .submit-btn:disabled { background: var(--soft); cursor: not-allowed; color: #999; }
+  .btn-submit:hover { background: #185FA5; }
+  .btn-submit:active { transform: scale(0.98); }
+  .btn-submit:disabled { background: #D3D1C7; color: #888780; cursor: not-allowed; }
 
-  /* ── Result ── */
-  .result {
-    display: none;
-    padding: 2rem 2.5rem;
-    text-align: center;
-    animation: fadeIn 0.5s ease both;
-  }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-  .result.show { display: block; }
-  .result-icon { font-size: 2.5rem; margin-bottom: 0.6rem; }
-  .result h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.4rem;
-    margin-bottom: 1rem;
-    color: var(--ink);
-  }
-  .result-table {
+  /* Next button */
+  .btn-next {
     width: 100%;
-    border-collapse: collapse;
-    font-size: 0.88rem;
-    margin-bottom: 1.2rem;
+    padding: 14px;
+    background: #F1EFE8;
+    color: #378ADD;
+    border: 1px solid #378ADD;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 12px;
   }
-  .result-table th {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.68rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #888;
-    padding: 0.4rem 0.6rem;
-    border-bottom: 1px solid var(--soft);
+  .btn-next:hover { background: #E6F1FB; }
+
+  /* Success screen */
+  .success {
+    display: none;
+    text-align: center;
+    padding: 20px 0;
+  }
+  .success.show { display: block; }
+  .success-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+  }
+  .success h2 { color: #1D9E75; font-size: 24px; margin-bottom: 8px; }
+  .success p { color: #5F5E5A; font-size: 14px; margin-bottom: 24px; line-height: 1.6; }
+
+  .summary {
+    background: #F1EFE8;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 20px;
     text-align: left;
   }
-  .result-table td {
-    padding: 0.55rem 0.6rem;
-    border-bottom: 1px dashed var(--soft);
+  .summary-title { color: #888780; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #E8E6DF;
+    font-size: 13px;
   }
-  .result-table td:last-child { text-align: right; font-family: 'DM Mono', monospace; font-weight: 500; }
-  .reset-btn {
-    background: transparent;
-    border: 1.5px solid var(--soft);
-    color: var(--ink);
-    padding: 0.6rem 1.4rem;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.75rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+  .summary-row:last-child { border-bottom: none; }
+  .summary-q { color: #5F5E5A; flex: 1; padding-right: 12px; }
+  .summary-pts { color: #185FA5; font-weight: 700; white-space: nowrap; }
+
+  .btn-restart {
+    background: #F1EFE8;
+    color: #5F5E5A;
+    border: 1px solid #D3D1C7;
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-size: 14px;
     cursor: pointer;
-    border-radius: 2px;
-    transition: border-color 0.2s;
+    transition: all 0.2s;
   }
-  .reset-btn:hover { border-color: var(--ink); }
+  .btn-restart:hover { background: #E8E6DF; color: #2C2C2A; }
+
+  .form-section { display: block; }
+  .form-section.hide { display: none; }
 </style>
 </head>
 <body>
 
-<div class="card" id="card">
+<div class="card">
 
-  <!-- HEADER -->
-  <div class="header">
-    <div class="badge">I-RAT / T-RAT · Metodo Michaelsen</div>
-    <h1 id="form-title">Isolamento termico e acustico – classe 3F</h1>
-    <p>Distribuisci al massimo <strong>4 punti</strong> tra le risposte che ritieni corrette.</p>
-  </div>
+  <!-- Header sempre visibile -->
+  <div class="badge">I-RAT / T-RAT · Metodo Michaelsen</div>
+  <h1>Isolamento termico e acustico – classe 3F</h1>
+  <p class="subtitle">Distribuisci al massimo <strong style="color:#2C2C2A">4 punti</strong> tra le risposte che ritieni corrette.</p>
 
-  <!-- FORM SECTION -->
-  <div id="form-body">
+  <!-- Sezione form -->
+  <div class="form-section" id="formSection">
 
-    <!-- Nome studente -->
-    <div class="name-section">
-      <label>Il tuo nome e cognome</label>
-      <input type="text" id="student-name" placeholder="Es. Mario Rossi" autocomplete="off">
+    <input type="text" class="name-input" id="nameInput" placeholder="Il tuo nome e cognome">
+
+    <!-- Progress -->
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width:25%"></div>
     </div>
+    <div class="progress-label" id="progressLabel">Domanda 1 di 4</div>
 
     <!-- Domanda -->
-    <div class="question-section">
-      <div class="q-label">Domanda 1</div>
-      <div class="q-text" id="question-text">
-        Quale delle seguenti affermazioni descrive correttamente il metodo scientifico?
-      </div>
-    </div>
+    <div class="question-text" id="questionText"></div>
 
-    <!-- Punti rimanenti HUD -->
-    <div class="points-hud">
-      <div class="hud-label">Punti rimanenti</div>
-      <div class="dots">
-        <div class="dot filled" id="d1"></div>
-        <div class="dot filled" id="d2"></div>
-        <div class="dot filled" id="d3"></div>
-        <div class="dot filled" id="d4"></div>
-      </div>
-      <div class="remaining-num" id="remaining">4</div>
+    <!-- Punti rimasti -->
+    <div class="points-bar">
+      <span class="points-label">Punti rimanenti</span>
+      <div class="points-count" id="pointsCount">4</div>
     </div>
 
     <!-- Opzioni -->
-    <div class="options" id="options-container">
-      <!-- Iniettato da JS -->
-    </div>
+    <div class="options" id="optionsContainer"></div>
 
-    <!-- Submit -->
-    <div class="footer">
-      <button class="submit-btn" id="submit-btn" onclick="handleSubmit()">
-        Invia risposta →
-      </button>
-    </div>
+    <!-- Pulsante invia / prossima -->
+    <button class="btn-submit" id="btnSubmit" onclick="nextOrSubmit()">
+      Domanda successiva →
+    </button>
 
   </div>
 
-  <!-- RISULTATO -->
-  <div class="result" id="result-section">
-    <div class="result-icon">✓</div>
+  <!-- Schermata successo -->
+  <div class="success" id="successScreen">
+    <div class="success-icon">✓</div>
     <h2>Risposta inviata!</h2>
-    <table class="result-table" id="result-table"></table>
-    <button class="reset-btn" onclick="handleReset()">↺ Ricomincia</button>
+    <p>Le tue risposte sono state registrate.<br>Attendi le istruzioni della docente.</p>
+    <div class="summary" id="summaryBox"></div>
+    <button class="btn-restart" onclick="restart()">↺ Ricomincia</button>
   </div>
 
 </div>
 
 <script>
-// ──────────────────────────────────────────────
-//  CONFIGURAZIONE — modifica qui la tua domanda
-// ──────────────────────────────────────────────
-const CONFIG = {
-  formTitle: "Isolamento termico e acustico – classe 3F",
-  questionText: "Qual è lo scopo principale dell'isolamento termico di un edificio?",
-  options: [
-    "Evitare che il freddo entri in inverno e il caldo in estate",
-    "Ridurre il rumore proveniente dall'esterno",
-    "Migliorare l'estetica delle facciate esterne",
-    "Aumentare la resistenza strutturale dei muri"
-  ]
-};
-// ──────────────────────────────────────────────
+const QUESTIONS = [
+  {
+    text: "D1 — Cos'è il bilancio termico di un edificio?",
+    options: [
+      "La quantità totale di calore prodotta dal riscaldamento",
+      "La differenza tra il calore che entra e il calore che esce dall'edificio",
+      "Il costo annuale dell'energia per riscaldare un appartamento",
+      "La temperatura media interna di un edificio in inverno"
+    ]
+  },
+  {
+    text: "D2 — Perché il ponte termico è un problema in un edificio?",
+    options: [
+      "Perché aumenta la temperatura interna in estate",
+      "Perché blocca il passaggio dell'aria tra interno ed esterno",
+      "Perché è un punto debole dove il calore disperso è maggiore, causando anche umidità e muffa",
+      "Perché riduce la resistenza strutturale delle pareti"
+    ]
+  },
+  {
+    text: "D3 — Cosa succede quando un'onda sonora incontra una parete spessa e pesante?",
+    options: [
+      "Viene completamente riflessa e torna indietro",
+      "Accelera e attraversa la parete più velocemente",
+      "Viene in parte assorbita e in parte trasmessa, ma la maggior parte viene bloccata",
+      "Si trasforma in calore e scompare completamente"
+    ]
+  },
+  {
+    text: "D4 — Quale tra questi materiali isola meglio sia dal calore che dal rumore?",
+    options: [
+      "Polistirene espanso (EPS)",
+      "Vetro semplice",
+      "Lana di roccia",
+      "Calcestruzzo armato"
+    ]
+  }
+];
 
-const LETTERS = ['A','B','C','D'];
-let scores = [0,0,0,0];
-const MAX = 4;
+const LETTERS = ['A', 'B', 'C', 'D'];
+let currentQ = 0;
+let points = [0, 0, 0, 0];
+let allAnswers = [];
 
-function remaining() { return MAX - scores.reduce((a,b) => a+b, 0); }
+function renderQuestion() {
+  const q = QUESTIONS[currentQ];
+  points = [0, 0, 0, 0];
 
-function init() {
-  document.getElementById('form-title').textContent = CONFIG.formTitle;
-  document.getElementById('question-text').textContent = CONFIG.questionText;
-  const container = document.getElementById('options-container');
+  document.getElementById('questionText').textContent = q.text;
+  document.getElementById('progressFill').style.width = ((currentQ + 1) / QUESTIONS.length * 100) + '%';
+  document.getElementById('progressLabel').textContent = `Domanda ${currentQ + 1} di ${QUESTIONS.length}`;
+
+  const isLast = currentQ === QUESTIONS.length - 1;
+  document.getElementById('btnSubmit').textContent = isLast ? 'Invia risposta →' : 'Domanda successiva →';
+
+  updatePointsDisplay();
+  renderOptions();
+}
+
+function renderOptions() {
+  const container = document.getElementById('optionsContainer');
   container.innerHTML = '';
-  CONFIG.options.forEach((text, i) => {
-    container.innerHTML += `
-      <div class="option-row" id="row-${i}">
-        <span class="option-letter">${LETTERS[i]}</span>
-        <span class="option-text">${text}</span>
-        <div class="stepper">
-          <button class="stepper-btn" id="dec-${i}" onclick="change(${i},-1)" disabled>−</button>
-          <span class="stepper-val" id="val-${i}">0</span>
-          <button class="stepper-btn" id="inc-${i}" onclick="change(${i},1)">+</button>
-        </div>
-      </div>`;
+  QUESTIONS[currentQ].options.forEach((opt, i) => {
+    const div = document.createElement('div');
+    div.className = 'option';
+    div.id = `opt${i}`;
+    div.innerHTML = `
+      <div class="option-left">
+        <div class="option-letter" id="letter${i}">${LETTERS[i]}</div>
+        <div class="option-text">${opt}</div>
+      </div>
+      <div class="option-controls">
+        <button class="btn-ctrl btn-minus" onclick="change(${i}, -1)">−</button>
+        <span class="opt-points" id="pts${i}">0</span>
+        <button class="btn-ctrl btn-plus" id="plus${i}" onclick="change(${i}, +1)">+</button>
+      </div>
+    `;
+    container.appendChild(div);
   });
-  updateHUD();
 }
 
-function change(i, delta) {
-  const rem = remaining();
-  if (delta > 0 && rem === 0) return;
-  if (delta < 0 && scores[i] === 0) return;
-  scores[i] += delta;
-  updateHUD();
+function change(idx, delta) {
+  const remaining = 4 - points.reduce((a,b) => a+b, 0);
+  if (delta > 0 && remaining <= 0) return;
+  if (delta < 0 && points[idx] <= 0) return;
+
+  points[idx] += delta;
+  document.getElementById(`pts${idx}`).textContent = points[idx];
+
+  const opt = document.getElementById(`opt${idx}`);
+  opt.className = points[idx] > 0 ? 'option has-points' : 'option';
+
+  updatePointsDisplay();
+  updatePlusButtons();
+  updateSubmitButton();
 }
 
-function updateHUD() {
-  const rem = remaining();
-  // dots
-  for (let d = 1; d <= 4; d++) {
-    document.getElementById('d'+d).classList.toggle('filled', d <= rem);
+function updatePointsDisplay() {
+  const rem = 4 - points.reduce((a,b) => a+b, 0);
+  const el = document.getElementById('pointsCount');
+  el.textContent = rem;
+  el.className = rem === 0 ? 'points-count zero' : (rem < 4 ? 'points-count warning' : 'points-count');
+}
+
+function updatePlusButtons() {
+  const rem = 4 - points.reduce((a,b) => a+b, 0);
+  for (let i = 0; i < 4; i++) {
+    document.getElementById(`plus${i}`).disabled = rem <= 0;
   }
-  const numEl = document.getElementById('remaining');
-  numEl.textContent = rem;
-  numEl.className = 'remaining-num' + (rem === 0 ? ' zero' : '');
-
-  // option controls
-  scores.forEach((v, i) => {
-    const valEl = document.getElementById('val-'+i);
-    valEl.textContent = v;
-    valEl.className = 'stepper-val' + (v > 0 ? ' nonzero' : '');
-    document.getElementById('inc-'+i).disabled = (rem === 0);
-    document.getElementById('dec-'+i).disabled = (v === 0);
-    document.getElementById('row-'+i).classList.toggle('active', v > 0);
-  });
-
-  // submit button
-  const used = MAX - rem;
-  document.getElementById('submit-btn').disabled = (used === 0);
 }
 
-function handleSubmit() {
-  const name = document.getElementById('student-name').value.trim();
-  if (!name) {
-    document.getElementById('student-name').focus();
-    document.getElementById('student-name').style.borderColor = '#c84b31';
-    return;
+function updateSubmitButton() {
+  const total = points.reduce((a,b) => a+b, 0);
+  document.getElementById('btnSubmit').disabled = total === 0;
+}
+
+function nextOrSubmit() {
+  // save answers for this question
+  allAnswers.push({
+    question: QUESTIONS[currentQ].text,
+    points: [...points]
+  });
+
+  if (currentQ < QUESTIONS.length - 1) {
+    currentQ++;
+    renderQuestion();
+  } else {
+    showSuccess();
   }
+}
 
-  // Build result table
-  let rows = `<tr>
-    <th>Opzione</th><th>Risposta</th><th>Punti</th>
-  </tr>`;
-  CONFIG.options.forEach((text, i) => {
-    if (scores[i] > 0) {
-      rows += `<tr>
-        <td><strong>${LETTERS[i]}</strong></td>
-        <td>${text}</td>
-        <td>${scores[i]}</td>
-      </tr>`;
-    }
+function showSuccess() {
+  document.getElementById('formSection').classList.add('hide');
+  const s = document.getElementById('successScreen');
+  s.classList.add('show');
+
+  // Build summary
+  const box = document.getElementById('summaryBox');
+  box.innerHTML = '<div class="summary-title">Riepilogo risposte</div>';
+  const name = document.getElementById('nameInput').value || 'Anonimo';
+
+  allAnswers.forEach((ans, qi) => {
+    const row = document.createElement('div');
+    row.className = 'summary-row';
+    const ptsStr = LETTERS.map((l, i) => `${l}:${ans.points[i]}`).join('  ');
+    row.innerHTML = `<span class="summary-q">D${qi+1}</span><span class="summary-pts">${ptsStr}</span>`;
+    box.appendChild(row);
   });
-  document.getElementById('result-table').innerHTML = rows;
-
-  document.getElementById('form-body').style.display = 'none';
-  const res = document.getElementById('result-section');
-  res.classList.add('show');
-  res.querySelector('h2').textContent = `Grazie, ${name}!`;
 }
 
-function handleReset() {
-  scores = [0,0,0,0];
-  document.getElementById('student-name').value = '';
-  document.getElementById('student-name').style.borderColor = '';
-  document.getElementById('form-body').style.display = 'block';
-  document.getElementById('result-section').classList.remove('show');
-  init();
+function restart() {
+  currentQ = 0;
+  allAnswers = [];
+  document.getElementById('nameInput').value = '';
+  document.getElementById('formSection').classList.remove('hide');
+  document.getElementById('successScreen').classList.remove('show');
+  renderQuestion();
+  updateSubmitButton();
 }
 
-// Start
-init();
+// Init
+renderQuestion();
+updateSubmitButton();
 </script>
 </body>
 </html>
