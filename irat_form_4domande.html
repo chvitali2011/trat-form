@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>I-RAT · Quiz Isolamento</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap');
+
+  :root {
+    --ink: #1a1a2e;
+    --paper: #f5f0e8;
+    --accent: #c84b31;
+    --gold: #e8b84b;
+    --soft: #d4cfc4;
+    --green: #2e7d4f;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    background-image:
+      radial-gradient(ellipse at 20% 10%, rgba(232,184,75,0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 90%, rgba(200,75,49,0.1) 0%, transparent 50%);
+  }
+
+  .card {
+    background: #fff;
+    border: 2px solid var(--ink);
+    border-radius: 2px;
+    max-width: 680px;
+    width: 100%;
+    box-shadow: 8px 8px 0 var(--ink);
+    overflow: hidden;
+    animation: slideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(32px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Header ── */
+  .header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 2rem 2.5rem 1.6rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: 'I-RAT';
+    position: absolute;
+    right: -10px; top: -18px;
+    font-family: 'Playfair Display', serif;
+    font-size: 7rem;
+    font-weight: 900;
+    color: rgba(255,255,255,0.04);
+    pointer-events: none;
+    letter-spacing: -4px;
+  }
+  .badge {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    padding: 3px 10px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    margin-bottom: 0.7rem;
+  }
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.7rem;
+    line-height: 1.2;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+  }
+  .header p {
+    font-size: 0.82rem;
+    opacity: 0.6;
+    font-weight: 300;
+  }
+
+  /* ── Progress bar ── */
+  .progress-bar-wrap {
+    background: var(--soft);
+    height: 4px;
+  }
+  .progress-bar-fill {
+    background: var(--gold);
+    height: 4px;
+    transition: width 0.4s ease;
+  }
+
+  /* ── Student name ── */
+  .name-section {
+    padding: 1.6rem 2.5rem 1.4rem;
+    border-bottom: 1px dashed var(--soft);
+  }
+  .name-section label {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+  .name-section input {
+    width: 100%;
+    border: 1.5px solid var(--soft);
+    border-radius: 2px;
+    padding: 0.65rem 0.9rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    color: var(--ink);
+    background: #fafaf8;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .name-section input:focus { border-color: var(--ink); }
+  .name-section input.error { border-color: var(--accent); }
+
+  /* ── Question ── */
+  .question-section {
+    padding: 1.8rem 2.5rem 0;
+  }
+  .q-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 0.6rem;
+  }
+  .q-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+
+  /* ── Points HUD ── */
+  .points-hud {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 2.5rem;
+    background: #fafaf8;
+    border-top: 1px solid var(--soft);
+    border-bottom: 1px solid var(--soft);
+    margin-top: 1.4rem;
+  }
+  .hud-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #666;
+    flex: 1;
+  }
+  .dots { display: flex; gap: 6px; }
+  .dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    border: 2px solid var(--soft);
+    background: transparent;
+    transition: background 0.25s, border-color 0.25s;
+  }
+  .dot.filled { background: var(--gold); border-color: var(--gold); }
+  .remaining-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--ink);
+    min-width: 28px;
+    text-align: right;
+    transition: color 0.2s;
+  }
+  .remaining-num.zero { color: var(--accent); }
+
+  /* ── Options ── */
+  .options {
+    padding: 1.2rem 2.5rem 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .option-row {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.8rem 1rem;
+    border: 1.5px solid var(--soft);
+    border-radius: 2px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .option-row.active { border-color: var(--ink); background: #fafaf8; }
+  .option-letter {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 20px;
+  }
+  .option-text {
+    flex: 1;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    color: var(--ink);
+  }
+  .stepper { display: flex; align-items: center; gap: 8px; }
+  .stepper-btn {
+    width: 28px; height: 28px;
+    border: 1.5px solid var(--soft);
+    border-radius: 2px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--ink);
+    transition: background 0.15s, border-color 0.15s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .stepper-btn:hover:not(:disabled) { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .stepper-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+  .stepper-val {
+    font-family: 'DM Mono', monospace;
+    font-size: 1rem;
+    font-weight: 500;
+    min-width: 18px;
+    text-align: center;
+    color: var(--ink);
+  }
+  .stepper-val.nonzero { color: var(--accent); font-weight: 700; }
+
+  /* ── Footer navigation ── */
+  .footer {
+    padding: 1.5rem 2.5rem 2rem;
+    display: flex;
+    gap: 0.75rem;
+  }
+  .btn-prev {
+    padding: 0.9rem 1.4rem;
+    background: transparent;
+    color: var(--ink);
+    border: 1.5px solid var(--soft);
+    border-radius: 2px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .btn-prev:hover { border-color: var(--ink); }
+  .btn-next {
+    flex: 1;
+    padding: 0.9rem;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    border-radius: 2px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .btn-next:hover { background: var(--accent); }
+  .btn-next:active { transform: scale(0.99); }
+  .btn-next:disabled { background: var(--soft); cursor: not-allowed; color: #999; }
+
+  /* ── Summary screen ── */
+  .summary-section {
+    display: none;
+    padding: 1.8rem 2.5rem;
+    animation: fadeIn 0.4s ease both;
+  }
+  .summary-section.show { display: block; }
+  .summary-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    margin-bottom: 0.4rem;
+    color: var(--ink);
+  }
+  .summary-sub {
+    font-size: 0.82rem;
+    color: #888;
+    margin-bottom: 1.4rem;
+  }
+  .summary-q {
+    border: 1.5px solid var(--soft);
+    border-radius: 2px;
+    margin-bottom: 0.75rem;
+    overflow: hidden;
+  }
+  .summary-q-header {
+    background: #fafaf8;
+    padding: 0.6rem 1rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #888;
+    border-bottom: 1px solid var(--soft);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .summary-q-text {
+    padding: 0.7rem 1rem;
+    font-size: 0.88rem;
+    color: var(--ink);
+    line-height: 1.4;
+    border-bottom: 1px dashed var(--soft);
+  }
+  .summary-answers {
+    padding: 0.6rem 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .summary-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 3px 10px;
+    border-radius: 2px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    background: var(--gold);
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .edit-link {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--accent);
+    text-decoration: underline;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .submit-final-btn {
+    width: 100%;
+    margin-top: 1.2rem;
+    padding: 0.9rem;
+    background: var(--green);
+    color: #fff;
+    border: none;
+    border-radius: 2px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .submit-final-btn:hover { opacity: 0.88; }
+
+  /* ── Result ── */
+  .result-section {
+    display: none;
+    padding: 2.5rem 2.5rem;
+    text-align: center;
+    animation: fadeIn 0.5s ease both;
+  }
+  .result-section.show { display: block; }
+  .result-icon { font-size: 2.5rem; margin-bottom: 0.6rem; }
+  .result-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+    color: var(--ink);
+  }
+  .result-sub {
+    font-size: 0.85rem;
+    color: #888;
+    margin-bottom: 1.5rem;
+  }
+  .result-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+  }
+  .result-cell {
+    border: 1.5px solid var(--soft);
+    border-radius: 2px;
+    padding: 0.8rem;
+    text-align: left;
+  }
+  .result-cell-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #888;
+    margin-bottom: 0.3rem;
+  }
+  .result-cell-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+  .reset-btn {
+    background: transparent;
+    border: 1.5px solid var(--soft);
+    color: var(--ink);
+    padding: 0.6rem 1.4rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: border-color 0.2s;
+  }
+  .reset-btn:hover { border-color: var(--ink); }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+</style>
+</head>
+<body>
+
+<div class="card" id="card">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="badge">I-RAT / T-RAT · Metodo Michaelsen</div>
+    <h1>Plastica e microplastiche – classe 1F</h1>
+    <p>Distribuisci al massimo <strong>4 punti</strong> tra le risposte che ritieni corrette.</p>
+  </div>
+
+  <!-- PROGRESS BAR -->
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+  </div>
+
+  <!-- FORM BODY -->
+  <div id="form-body">
+
+    <!-- Nome studente -->
+    <div class="name-section" id="name-section">
+      <label>Il tuo nome e cognome</label>
+      <input type="text" id="student-name" placeholder="Es. Mario Rossi" autocomplete="off">
+    </div>
+
+    <!-- Domanda corrente -->
+    <div class="question-section">
+      <div class="q-label" id="q-label">Domanda 1 di 4</div>
+      <div class="q-text" id="q-text"></div>
+    </div>
+
+    <!-- Punti HUD -->
+    <div class="points-hud">
+      <div class="hud-label">Punti rimanenti</div>
+      <div class="dots">
+        <div class="dot" id="d1"></div>
+        <div class="dot" id="d2"></div>
+        <div class="dot" id="d3"></div>
+        <div class="dot" id="d4"></div>
+      </div>
+      <div class="remaining-num" id="remaining">4</div>
+    </div>
+
+    <!-- Opzioni -->
+    <div class="options" id="options-container"></div>
+
+    <!-- Navigation -->
+    <div class="footer">
+      <button class="btn-prev" id="btn-prev" onclick="goBack()">← Indietro</button>
+      <button class="btn-next" id="btn-next" onclick="goNext()">Avanti →</button>
+    </div>
+
+  </div>
+
+  <!-- RIEPILOGO -->
+  <div class="summary-section" id="summary-section">
+    <div class="summary-title">Riepilogo risposte</div>
+    <div class="summary-sub">Controlla le tue risposte prima di inviare.</div>
+    <div id="summary-list"></div>
+    <button class="submit-final-btn" onclick="submitAll()">Invia tutte le risposte ✓</button>
+  </div>
+
+  <!-- RISULTATO FINALE -->
+  <div class="result-section" id="result-section">
+    <div class="result-icon">✓</div>
+    <div class="result-title" id="result-title">Grazie!</div>
+    <div class="result-sub">Le tue risposte sono state registrate.</div>
+    <div class="result-grid" id="result-grid"></div>
+    <button class="reset-btn" onclick="resetAll()">↺ Ricomincia</button>
+  </div>
+
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+//  CONFIGURAZIONE — modifica qui le domande
+// ─────────────────────────────────────────────
+const QUESTIONS = [
+  {
+    text: "Cosa sono le microplastiche?",
+    options: [
+      "Piccoli pezzi di plastica biodegradabile usati negli imballaggi",
+      "Frammenti di plastica più piccoli di 5 mm dispersi nell'ambiente",
+      "Un tipo speciale di plastica usata solo nei cosmetici",
+      "Granuli di plastica usati nelle fabbriche per produrre oggetti"
+    ]
+  },
+  {
+    text: "Da dove vengono principalmente le microplastiche che troviamo in mare?",
+    options: [
+      "Vengono prodotte direttamente dai pesci quando digeriscono la plastica",
+      "Nascono dalla decomposizione delle alghe marine",
+      "Derivano dalla frammentazione di oggetti di plastica più grandi o dal lavaggio dei vestiti sintetici",
+      "Vengono scaricate direttamente dalle navi da guerra"
+    ]
+  },
+  {
+    text: "Come arriva la plastica dall'entroterra fino al mare?",
+    options: [
+      "Viene trasportata dagli uccelli migratori",
+      "Viene trasportata dai fiumi, che raccolgono i rifiuti dalle città e dalle campagne",
+      "Evapora con il calore e ricade in mare con la pioggia",
+      "Si scioglie nel suolo e filtra fino al mare attraverso le rocce"
+    ]
+  },
+  {
+    text: "Perché le microplastiche sono pericolose per gli animali marini?",
+    options: [
+      "Perché aumentano la temperatura dell'acqua del mare",
+      "Perché vengono scambiate per cibo e ingerite, ostruendo l'apparato digerente",
+      "Perché rendono l'acqua salata e gli animali non riescono a respirare",
+      "Perché producono suoni che disturbano la comunicazione tra i pesci"
+    ]
+  },
+  {
+    text: "Quale di queste è una soluzione concreta per ridurre l'inquinamento da plastica?",
+    options: [
+      "Produrre più plastica monouso perché costa meno",
+      "Bruciare tutti i rifiuti plastici sulla spiaggia",
+      "Usare bioplastiche biodegradabili e ridurre gli imballaggi inutili",
+      "Vietare l'uso di qualsiasi materiale sintetico in tutto il mondo"
+    ]
+  }
+];
+
+// ─────────────────────────────────────────────
+//  GOOGLE FORMS ENDPOINT
+//  Sostituisci con il tuo URL di Google Forms
+// ─────────────────────────────────────────────
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzj0_L-ITUp0iYudYMGNoIcUsgOytj0_MHWJS_qo8T03VKvrqWU0WSEBne5kdYFxuVV/exec";
+// ─────────────────────────────────────────────
+
+const LETTERS = ['A','B','C','D'];
+const MAX_PTS = 4;
+const TOTAL_Q = QUESTIONS.length;
+
+// State
+let currentQ = 0;
+let allScores = QUESTIONS.map(() => [0, 0, 0, 0]);
+
+function remaining() {
+  return MAX_PTS - allScores[currentQ].reduce((a, b) => a + b, 0);
+}
+
+function renderQuestion() {
+  const q = QUESTIONS[currentQ];
+  document.getElementById('q-label').textContent = `Domanda ${currentQ + 1} di ${TOTAL_Q}`;
+  document.getElementById('q-text').textContent = q.text;
+
+  // Progress
+  document.getElementById('progress-fill').style.width =
+    ((currentQ) / TOTAL_Q * 100) + '%';
+
+  // Name section: only show on first question
+  document.getElementById('name-section').style.display =
+    currentQ === 0 ? 'block' : 'none';
+
+  // Options
+  const container = document.getElementById('options-container');
+  container.innerHTML = '';
+  q.options.forEach((text, i) => {
+    container.innerHTML += `
+      <div class="option-row" id="row-${i}">
+        <span class="option-letter">${LETTERS[i]}</span>
+        <span class="option-text">${text}</span>
+        <div class="stepper">
+          <button class="stepper-btn" id="dec-${i}" onclick="change(${i},-1)">−</button>
+          <span class="stepper-val" id="val-${i}">0</span>
+          <button class="stepper-btn" id="inc-${i}" onclick="change(${i},1)">+</button>
+        </div>
+      </div>`;
+  });
+
+  // Prev button
+  document.getElementById('btn-prev').style.display =
+    currentQ === 0 ? 'none' : 'block';
+
+  // Next label
+  const nextBtn = document.getElementById('btn-next');
+  nextBtn.textContent = currentQ === TOTAL_Q - 1 ? 'Riepilogo →' : 'Avanti →';
+
+  updateHUD();
+}
+
+function change(i, delta) {
+  const rem = remaining();
+  if (delta > 0 && rem === 0) return;
+  if (delta < 0 && allScores[currentQ][i] === 0) return;
+  allScores[currentQ][i] += delta;
+  updateHUD();
+}
+
+function updateHUD() {
+  const rem = remaining();
+  const scores = allScores[currentQ];
+
+  for (let d = 1; d <= 4; d++) {
+    document.getElementById('d' + d).classList.toggle('filled', d <= rem);
+  }
+  const numEl = document.getElementById('remaining');
+  numEl.textContent = rem;
+  numEl.className = 'remaining-num' + (rem === 0 ? ' zero' : '');
+
+  scores.forEach((v, i) => {
+    const valEl = document.getElementById('val-' + i);
+    if (!valEl) return;
+    valEl.textContent = v;
+    valEl.className = 'stepper-val' + (v > 0 ? ' nonzero' : '');
+    document.getElementById('inc-' + i).disabled = (rem === 0);
+    document.getElementById('dec-' + i).disabled = (v === 0);
+    document.getElementById('row-' + i).classList.toggle('active', v > 0);
+  });
+
+  const used = MAX_PTS - rem;
+  document.getElementById('btn-next').disabled = (used === 0);
+}
+
+function goNext() {
+  if (currentQ === 0) {
+    const name = document.getElementById('student-name').value.trim();
+    if (!name) {
+      const inp = document.getElementById('student-name');
+      inp.classList.add('error');
+      inp.focus();
+      inp.addEventListener('input', () => inp.classList.remove('error'), { once: true });
+      return;
+    }
+  }
+
+  if (currentQ < TOTAL_Q - 1) {
+    currentQ++;
+    renderQuestion();
+  } else {
+    showSummary();
+  }
+}
+
+function goBack() {
+  if (currentQ > 0) {
+    currentQ--;
+    renderQuestion();
+  }
+}
+
+function showSummary() {
+  document.getElementById('form-body').style.display = 'none';
+  document.getElementById('progress-fill').style.width = '100%';
+
+  const name = document.getElementById('student-name').value.trim();
+  const list = document.getElementById('summary-list');
+  list.innerHTML = '';
+
+  QUESTIONS.forEach((q, qi) => {
+    const scores = allScores[qi];
+    const answered = scores.some(v => v > 0);
+    const chips = scores
+      .map((v, i) => v > 0 ? `<span class="summary-chip">${LETTERS[i]} · ${v}pt</span>` : '')
+      .join('');
+
+    list.innerHTML += `
+      <div class="summary-q">
+        <div class="summary-q-header">
+          <span>Domanda ${qi + 1}</span>
+          <span class="edit-link" onclick="editQuestion(${qi})">modifica</span>
+        </div>
+        <div class="summary-q-text">${q.text}</div>
+        <div class="summary-answers">
+          ${answered ? chips : '<span style="color:#888;font-size:0.8rem">Nessuna risposta</span>'}
+        </div>
+      </div>`;
+  });
+
+  const summary = document.getElementById('summary-section');
+  summary.classList.add('show');
+  summary.querySelector('.summary-sub').textContent =
+    `${name} — controlla le tue risposte prima di inviare.`;
+}
+
+function editQuestion(qi) {
+  document.getElementById('summary-section').classList.remove('show');
+  document.getElementById('form-body').style.display = 'block';
+  currentQ = qi;
+  renderQuestion();
+}
+
+function submitAll() {
+  const name = document.getElementById('student-name').value.trim();
+
+  // Prepara il riepilogo per il result screen
+  const grid = document.getElementById('result-grid');
+  grid.innerHTML = QUESTIONS.map((q, qi) => {
+    const scores = allScores[qi];
+    const chosen = scores
+      .map((v, i) => v > 0 ? `${LETTERS[i]}(${v})` : '')
+      .filter(Boolean)
+      .join(', ');
+    return `
+      <div class="result-cell">
+        <div class="result-cell-label">Domanda ${qi + 1}</div>
+        <div class="result-cell-value">${chosen || '—'}</div>
+      </div>`;
+  }).join('');
+
+  document.getElementById('result-title').textContent = `Grazie, ${name}!`;
+  document.getElementById('summary-section').classList.remove('show');
+  document.getElementById('result-section').classList.add('show');
+
+  // ── Invio ad Apps Script ──
+  if (APPS_SCRIPT_URL) {
+    const formatScore = (qi) =>
+      allScores[qi].map((v, i) => v > 0 ? `${LETTERS[i]}=${v}` : '').filter(Boolean).join(' | ');
+
+    const payload = {
+      nome: name,
+      d1: formatScore(0),
+      d2: formatScore(1),
+      d3: formatScore(2),
+      d4: formatScore(3),
+      d5: formatScore(4)
+    };
+
+    fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+  }
+}
+
+function resetAll() {
+  allScores = QUESTIONS.map(() => [0, 0, 0, 0]);
+  currentQ = 0;
+  document.getElementById('student-name').value = '';
+  document.getElementById('result-section').classList.remove('show');
+  document.getElementById('summary-section').classList.remove('show');
+  document.getElementById('form-body').style.display = 'block';
+  renderQuestion();
+}
+
+// Start
+renderQuestion();
+</script>
+</body>
+</html>
